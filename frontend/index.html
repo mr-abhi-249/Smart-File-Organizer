@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart File Organizer</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #f8fafc;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #94a3b8;
+            font-size: 17px;
+        }
+
+        .card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .folder-section label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .folder-input {
+            display: flex;
+            gap: 12px;
+        }
+
+        .folder-input input {
+            flex: 1;
+            height: 50px;
+            padding: 0 16px;
+            border-radius: 10px;
+            border: 1px solid #475569;
+            background: #020617;
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .folder-input input:focus {
+            border-color: #38bdf8;
+        }
+
+        button {
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #scanBtn {
+            padding: 0 25px;
+            background: #2563eb;
+        }
+
+        #scanBtn:hover {
+            background: #1d4ed8;
+        }
+
+        .message {
+            min-height: 25px;
+            margin-top: 15px;
+            color: #fbbf24;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .total-files {
+            margin: 30px 0;
+            padding: 25px;
+            text-align: center;
+            background: #020617;
+            border: 1px solid #334155;
+            border-radius: 15px;
+        }
+
+        .total-files h2 {
+            font-size: 48px;
+            color: #38bdf8;
+        }
+
+        .total-files p {
+            margin-top: 5px;
+            color: #94a3b8;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .stat-card {
+            min-height: 140px;
+            padding: 20px;
+            text-align: center;
+            background: #111827;
+            border: 1px solid #334155;
+            border-radius: 14px;
+        }
+
+        .stat-card:hover {
+            border-color: #38bdf8;
+            transform: translateY(-3px);
+            transition: 0.2s;
+        }
+
+        .stat-card span {
+            font-size: 30px;
+        }
+
+        .stat-card h3 {
+            margin: 10px 0 5px;
+            font-size: 26px;
+        }
+
+        .stat-card p {
+            color: #94a3b8;
+        }
+
+        .action-section {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        #organizeBtn {
+            padding: 15px 35px;
+            background: #16a34a;
+            font-size: 16px;
+        }
+
+        #organizeBtn:hover {
+            background: #15803d;
+        }
+
+        #organizeBtn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .file-list {
+            margin-top: 25px;
+            padding: 22px;
+            background: #020617;
+            border: 1px solid #334155;
+            border-radius: 15px;
+        }
+
+        .file-list h2 {
+            margin-bottom: 18px;
+        }
+
+        #filesContainer {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 13px 15px;
+            background: #111827;
+            border: 1px solid #1e293b;
+            border-radius: 9px;
+        }
+
+        .file-category {
+            color: #38bdf8;
+            font-weight: bold;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 25px;
+            text-align: center;
+            background: #052e16;
+            border: 1px solid #166534;
+            border-radius: 15px;
+        }
+
+        .result h2 {
+            margin-bottom: 10px;
+        }
+
+        .result p {
+            color: #bbf7d0;
+        }
+
+        @media (max-width: 800px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            #filesContainer {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 20px 10px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            header h1 {
+                font-size: 28px;
+            }
+
+            .folder-input {
+                flex-direction: column;
+            }
+
+            #scanBtn {
+                height: 50px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <header>
+
+        <h1>📁 Smart File Organizer</h1>
+
+        <p>Organize your files quickly and safely.</p>
+
+    </header>
+
+
+    <main class="card">
+
+        <div class="folder-section">
+
+            <label for="folderPath">
+                Folder Path
+            </label>
+
+            <div class="folder-input">
+
+    <input
+        type="text"
+        id="folderPath"
+        placeholder="Select a folder..."
+        readonly
+    >
+
+    <button id="browseBtn">
+        📂 Browse
+    </button>
+
+    <button id="scanBtn">
+        🔍 Scan
+    </button>
+
+</div>
+
+        </div>
+
+
+        <div id="message" class="message"></div>
+
+
+        <section id="dashboard" class="hidden">
+
+            <div class="total-files">
+
+                <h2 id="totalFiles">0</h2>
+
+                <p>Total Files</p>
+
+            </div>
+
+
+            <div class="stats">
+
+                <div class="stat-card">
+                    <span>🖼️</span>
+                    <h3 id="imagesCount">0</h3>
+                    <p>Images</p>
+                </div>
+
+                <div class="stat-card">
+                    <span>🎬</span>
+                    <h3 id="videosCount">0</h3>
+                    <p>Videos</p>
+                </div>
+
+                <div class="stat-card">
+                    <span>🎵</span>
+                    <h3 id="audioCount">0</h3>
+                    <p>Audio</p>
+                </div>
+
+                <div class="stat-card">
+                    <span>📄</span>
+                    <h3 id="documentsCount">0</h3>
+                    <p>Documents</p>
+                </div>
+
+                <div class="stat-card">
+                    <span>📦</span>
+                    <h3 id="archivesCount">0</h3>
+                    <p>Archives</p>
+                </div>
+
+                <div class="stat-card">
+                    <span>💻</span>
+                    <h3 id="codeCount">0</h3>
+                    <p>Code</p>
+                </div>
+
+                <div class="stat-card">
+                    <span>❓</span>
+                    <h3 id="othersCount">0</h3>
+                    <p>Others</p>
+                </div>
+
+            </div>
+
+
+            <div class="action-section">
+
+                <button id="organizeBtn">
+                    🚀 Organize Files
+                </button>
+
+            </div>
+
+
+            <div id="fileList" class="file-list">
+
+                <div id="filesContainer"></div>
+
+            </div>
+
+
+            <div id="result" class="result hidden">
+
+                <h2>✅ Organization Complete</h2>
+
+                <p>
+                    Files moved:
+                    <strong id="movedFiles">0</strong>
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="/script.js"></script>
+
+</body>
+
+</html>
